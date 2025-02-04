@@ -6,28 +6,25 @@ use PDO;
 use PDOException;
 use Dotenv;
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../../../'); // تأكد من صحة المسار
-$dotenv->load();
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../../../'); 
 
 class db {
     public function connection() {
-        // تكوين قاعدة البيانات
         $servername = $_ENV['DB_HOST'];
         $username = $_ENV['DB_USER'];
         $password = $_ENV['DB_PASSWORD'];
         $dbname = $_ENV['DB_NAME'];
+        $port = $_ENV['DB_PORT'];
+
 
         try {
-            // إنشاء اتصال PDO
-            $dsn = "mysql:host=$servername;dbname=$dbname;charset=utf8mb4";
+            $dsn = "pgsql:host=$servername;port=$port;dbname=$dbname";
             $pdo = new PDO($dsn, $username, $password);
 
-            // تعيين وضع الخطأ في PDO إلى استثناء
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            echo 'تم الاتصال بنجاح';
+            echo 'connection is succss';
         } catch (PDOException $e) {
-            // التعامل مع أخطاء الاتصال
-            die("فشل الاتصال: " . $e->getMessage());
+            die("erorr conn: " . $e->getMessage());
         }
 
         return $pdo;
